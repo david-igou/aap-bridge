@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aap-bridge-api
+spec:
+  selector:
+    app.kubernetes.io/name: aap-bridge-api
+  ports:
+    - name: http
+      port: 8000
+      targetPort: http

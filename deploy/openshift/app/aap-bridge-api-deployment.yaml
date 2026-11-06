@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aap-bridge-api
+  labels:
+    app.kubernetes.io/name: aap-bridge-api
+    app.kubernetes.io/part-of: aap-bridge
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: aap-bridge-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: aap-bridge-api
+        app.kubernetes.io/part-of: aap-bridge
+      annotations:
+        alpha.image.policy.openshift.io/resolve-names: '*'
+    spec:
+      serviceAccountName: aap-bridge
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: api
+          image: aap-bridge-api:deployed
+          imagePullPolicy: Always
+          env:
+            - name: AAP_BRIDGE_CONFIG
+              value: /etc/aap-bridge/config.yaml
+            - name: MIGRATION_STATE_DB_PATH
+              valueFrom:
+                secretKeyRef:
+                  name: aap-bridge-db
+                  key: MIGRATION_STATE_DB_PATH
+            - name: AAP_BRIDGE_TOKEN_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aap-bridge-secrets
+                  key: AAP_BRIDGE_TOKEN_ENCRYPTION_KEY
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+          ports:
+            - name: http
+              containerPort: 8000
+          startupProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 5
+            failureThreshold: 60
+          readinessProbe:
+            httpGet:
+              path: /api/jobs?limit=1
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 4Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: config
+              mountPath: /etc/aap-bridge
+              readOnly: true
+            - name: data
+              mountPath: /data
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: config
+          configMap:
+            name: aap-bridge-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: aap-bridge-data
+        - name: tmp
+          emptyDir: {}

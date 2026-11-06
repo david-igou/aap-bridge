@@ -1,0 +1,33 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: aap-bridge-ui
+  labels:
+    app.kubernetes.io/part-of: aap-bridge
+spec:
+  runPolicy: Serial
+  successfulBuildsHistoryLimit: 2
+  failedBuildsHistoryLimit: 2
+  source:
+    type: Git
+    git:
+      uri: https://github.com/david-igou/aap-bridge.git
+      ref: feature/openshift
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Containerfile.ui
+      pullSecret:
+        name: redhat-registry
+  output:
+    to:
+      kind: ImageStreamTag
+      name: aap-bridge-ui:latest
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "2"
+      memory: 2Gi
+  triggers: []

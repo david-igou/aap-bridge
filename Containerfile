@@ -30,10 +30,12 @@ COPY config/ config/
 
 RUN pip3.12 install --no-cache-dir .
 
-RUN mkdir -p exports xformed reports logs schemas && \
-    chown -R bridge:bridge exports xformed reports logs schemas
+RUN mkdir -p exports xformed reports logs schemas backups && \
+    chgrp 0 /app && chmod g+rx /app && \
+    chown -R 998:0 exports xformed reports logs schemas backups && \
+    chmod -R g=u exports xformed reports logs schemas backups
 
-USER bridge
+USER 998:0
 
 ENTRYPOINT ["aap-bridge"]
 
@@ -44,7 +46,7 @@ USER root
 
 RUN pip3.12 install --no-cache-dir '.[api]'
 
-USER bridge
+USER 998:0
 
 EXPOSE 8000
 

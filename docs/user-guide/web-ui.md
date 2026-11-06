@@ -4,6 +4,9 @@ AAP Bridge includes a browser-based interface built with React and PatternFly 5.
 It provides the same phased migration workflow as the TUI through a graphical
 interface with real-time log streaming.
 
+For native builds, persistent storage, and a TLS Route on OpenShift, see
+[OpenShift](../getting-started/openshift.md).
+
 ## Starting the Web UI
 
 ### Container Deployment (Recommended)

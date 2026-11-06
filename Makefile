@@ -334,6 +334,21 @@ web-test: ## Run frontend unit tests (vitest)
 serve: ## Start FastAPI API server (requires pip install '.[api]')
 	aap-bridge serve --host 0.0.0.0 --port 8000
 
+.PHONY: openshift-render openshift-validate
+OPENSHIFT_DIR ?= deploy/openshift
+
+openshift-render: ## Render OpenShift resources (override OPENSHIFT_DIR for external-db)
+	kustomize build $(OPENSHIFT_DIR)
+
+openshift-validate: ## Validate both layouts using the active OpenShift API schemas (no writes)
+	oc whoami --show-server
+	oc whoami
+	@set -eu; rendered=$$(mktemp); trap 'rm -f "$$rendered"' EXIT; \
+	for layout in deploy/openshift deploy/openshift/external-db; do \
+		kustomize build "$$layout" > "$$rendered"; \
+		oc apply --dry-run=client --validate=strict -n aap-bridge -f "$$rendered"; \
+	done
+
 # ===========================================================================
 #  Integration testing - AAP golden images and test pairs (requires podman)
 # ===========================================================================

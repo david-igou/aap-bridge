@@ -1,12 +1,13 @@
 # Installation
 
-AAP Bridge supports two workflows:
+AAP Bridge supports these workflows:
 
 | Mode | What you manage | Best for |
 | --- | --- | --- |
 | **Local host install** | Python environment + PostgreSQL | Default day-to-day development and direct host usage |
 | **Container CLI** | Podman images and compose services | Isolated CLI workflow with PostgreSQL included |
 | **Web UI** | Podman images, compose services, and a browser | Browser-based connection management and migration runs |
+| **OpenShift** | Native builds, Deployments, PVCs, and a Route | Cluster-hosted Web UI; see [OpenShift](openshift.md) |
 
 The containerized workflow is optional. The original local host setup remains fully supported.
 

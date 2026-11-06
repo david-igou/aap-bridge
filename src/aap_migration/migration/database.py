@@ -27,7 +27,7 @@ _SessionFactory: sessionmaker | None = None
 
 def normalize_database_url(db_path: str) -> str:
     """Return a SQLAlchemy-compatible URL from a DSN or filesystem path."""
-    if db_path.startswith(("postgresql://", "sqlite://", "mysql://")):
+    if db_path.startswith(("postgresql://", "postgresql+psycopg2://", "sqlite://", "mysql://")):
         return db_path
     return f"sqlite:///{db_path}"
 

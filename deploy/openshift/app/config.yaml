@@ -1,0 +1,12 @@
+# Web UI connections supply source and target settings at runtime.
+paths:
+  base_dir: /data
+  export_dir: /data/exports
+  transform_dir: /data/xformed
+  schema_dir: /data/schemas
+  report_dir: /data/reports
+  backup_dir: /data/backups
+  ignored_endpoints_file: /app/config/ignored_endpoints.yaml
+logging:
+  level: INFO
+  file: null

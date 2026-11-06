@@ -1,0 +1,9 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: aap-bridge-ui
+  labels:
+    app.kubernetes.io/part-of: aap-bridge
+spec:
+  lookupPolicy:
+    local: true

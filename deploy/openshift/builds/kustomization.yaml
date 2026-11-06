@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - aap-bridge-api-buildconfig.yaml
+  - aap-bridge-api-imagestream.yaml
+  - aap-bridge-ui-buildconfig.yaml
+  - aap-bridge-ui-imagestream.yaml
