@@ -13,7 +13,8 @@ in the repository.
 **New Features:**
 
 - OpenShift-native builds and deployment with persistent storage, an unauthenticated
-  TLS Route, bundled or external PostgreSQL, and explicit image promotion.
+  TLS Route, bundled or external PostgreSQL, and explicit image promotion using
+  native ImageStream triggers.
 - Driver-qualified PostgreSQL connection URLs for migration state and cleanup.
 - AAP 2.7 supported as a migration source and target (same-or-forward paths only;
   see compatibility matrix).

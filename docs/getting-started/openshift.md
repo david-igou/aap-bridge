@@ -123,13 +123,13 @@ oc start-build aap-bridge-api -n aap-bridge --follow --wait
 oc start-build aap-bridge-ui -n aap-bridge --follow --wait
 ```
 
-Builds publish `:latest`. Deployments consume a separate `:deployed` tag through
-OpenShift image lookup. Promote both successful builds and recreate the pods:
+Builds publish `:latest`. Native ImageStream triggers watch a separate
+`:deployed` tag and resolve it to an internal registry digest in each Deployment.
+Promote both successful builds to start their rollouts:
 
 ```bash
 oc tag aap-bridge-api:latest aap-bridge-api:deployed -n aap-bridge
 oc tag aap-bridge-ui:latest aap-bridge-ui:deployed -n aap-bridge
-oc rollout restart deployment/aap-bridge-api deployment/aap-bridge-ui -n aap-bridge
 oc rollout status deployment/aap-bridge-postgresql -n aap-bridge --timeout=300s
 oc rollout status deployment/aap-bridge-api -n aap-bridge --timeout=300s
 oc rollout status deployment/aap-bridge-ui -n aap-bridge --timeout=300s
@@ -174,9 +174,10 @@ promoting images, or restarting workloads. Kustomize hashes ConfigMaps, so
 applying changed configuration also triggers a rollout.
 
 Run the build and promotion commands again to deploy changes. A build alone
-updates only `:latest`; it does not trigger a deployment. For reproducible
+updates only `:latest`; it does not trigger a deployment. Promoting `:deployed`
+starts the rollout automatically when its digest changes. For reproducible
 builds, pin both BuildConfigs to the same commit. Retain the previous image
-digests so you can promote them back to `:deployed` and restart if needed.
+digests so you can promote them back to `:deployed` if needed.
 Treat database schema compatibility separately when rolling back application code.
 
 The integrated image registry must retain the built images. A registry backed

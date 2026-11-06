@@ -16,7 +16,8 @@ pre-commit / CI via `tools/check_changelog_periods.py` on this file and
 - **OpenShift Deployment**: Kustomize manifests for native BuildConfigs and
   ImageStreams, API/UI Deployments, an unauthenticated TLS Route, persistent
   migration files, and bundled or external PostgreSQL; includes arbitrary-UID
-  image permissions and explicit image promotion instructions.
+  image permissions and explicit image promotion instructions. Native ImageStream
+  triggers resolve promoted tags to internal registry digests.
 - **PostgreSQL Driver URLs**: Migration state and cleanup accept explicit
   `postgresql+psycopg2://` URLs using the PostgreSQL driver installed in the image.
 - **Instance Group Capacity Assignments**: Organizations, inventories, and job templates

@@ -2,6 +2,17 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: aap-bridge-api
+  annotations:
+    image.openshift.io/triggers: |
+      [
+        {
+          "from": {
+            "kind": "ImageStreamTag",
+            "name": "aap-bridge-api:deployed"
+          },
+          "fieldPath": "spec.template.spec.containers[?(@.name==\"api\")].image"
+        }
+      ]
   labels:
     app.kubernetes.io/name: aap-bridge-api
     app.kubernetes.io/part-of: aap-bridge
@@ -17,8 +28,6 @@ spec:
       labels:
         app.kubernetes.io/name: aap-bridge-api
         app.kubernetes.io/part-of: aap-bridge
-      annotations:
-        alpha.image.policy.openshift.io/resolve-names: '*'
     spec:
       serviceAccountName: aap-bridge
       automountServiceAccountToken: false
